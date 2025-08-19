@@ -15,7 +15,7 @@ import {z} from 'genkit';
 
 // Define the input schema for the personalized college insights flow
 const PersonalizedCollegeInsightsInputSchema = z.object({
-  gpa: z.number().describe('The student’s GPA.'),
+  percentage: z.number().describe("The student's percentage in 12th grade."),
   testScores: z.number().describe('The student’s standardized test scores (e.g., SAT, ACT).'),
   interests: z.string().describe('The student’s academic and extracurricular interests.'),
   collegeDescription: z.string().describe('A description of the college.'),
@@ -35,11 +35,11 @@ const personalizedCollegeInsightsPrompt = ai.definePrompt({
   output: {schema: PersonalizedCollegeInsightsOutputSchema},
   prompt: `You are an expert college advisor providing personalized insights to students.
 
-  Based on the student's GPA, test scores, and interests, assess how well their profile aligns with the following college:
+  Based on the student's percentage in 12th grade, test scores, and interests, assess how well their profile aligns with the following college:
 
   College Description: {{{collegeDescription}}}
 
-  Student GPA: {{{gpa}}}
+  Student 12th Percentage: {{{percentage}}}
   Student Test Scores: {{{testScores}}}
   Student Interests: {{{interests}}}
 
@@ -64,7 +64,7 @@ const personalizedCollegeInsightsFlow = ai.defineFlow(
 /**
  * Retrieves personalized college insights based on a student's academic profile.
  *
- * @param input - The input containing the student's GPA, test scores, interests, and college description.
+ * @param input - The input containing the student's 12th percentage, test scores, interests, and college description.
  * @returns A promise that resolves to the personalized college insights.
  */
 export async function getPersonalizedCollegeInsights(

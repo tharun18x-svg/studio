@@ -37,7 +37,7 @@ interface PersonalizedInsightsDialogProps {
 }
 
 const formSchema = z.object({
-  gpa: z.coerce.number().min(0).max(10.0, "GPA must be between 0 and 10.0"),
+  percentage: z.coerce.number().min(0).max(100, "Percentage must be between 0 and 100."),
   testScores: z.coerce.number().min(0).max(1600, "Score must be between 0 and 1600"),
   interests: z.string().min(10, "Please describe your interests.").max(500),
 });
@@ -50,7 +50,7 @@ export function PersonalizedInsightsDialog({ college, open, onOpenChange }: Pers
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      gpa: 8.5,
+      percentage: 85,
       testScores: 1200,
       interests: "I'm interested in AI, web development, and competitive programming.",
     },
@@ -101,12 +101,12 @@ export function PersonalizedInsightsDialog({ college, open, onOpenChange }: Pers
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
-                    name="gpa"
+                    name="percentage"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Your GPA (out of 10)</FormLabel>
+                        <FormLabel>Your 12th Percentage</FormLabel>
                         <FormControl>
-                          <Input type="number" step="0.1" placeholder="e.g., 8.5" {...field} />
+                          <Input type="number" step="1" placeholder="e.g., 85" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
