@@ -29,7 +29,7 @@ interface CollegeListProps {
   colleges: College[];
 }
 
-type SortKey = "ranking" | "highestPackage";
+type SortKey = "ranking" | "highestPackage" | "code";
 
 export default function CollegeList({ colleges }: CollegeListProps) {
   const isMobile = useIsMobile();
@@ -153,6 +153,11 @@ const DesktopView = ({ colleges, filter, sortConfig, requestSort, getSortIndicat
         <TableRow>
           <TableHead>College</TableHead>
           <TableHead>
+            <Button variant="ghost" onClick={() => requestSort("code")}>
+              Code {getSortIndicator("code")}
+            </Button>
+          </TableHead>
+          <TableHead>
             <Button variant="ghost" onClick={() => requestSort("ranking")}>
               Rank {getSortIndicator("ranking")}
             </Button>
@@ -173,9 +178,10 @@ const DesktopView = ({ colleges, filter, sortConfig, requestSort, getSortIndicat
           <TableRow key={college.id}>
             <TableCell>
               <div className="flex items-center gap-3">
-                <span className="font-medium">{college.name} ({college.code})</span>
+                <span className="font-medium">{college.name}</span>
               </div>
             </TableCell>
+            <TableCell className="text-center">{college.code}</TableCell>
             <TableCell className="text-center">{college.ranking}</TableCell>
             <TableCell className="text-center">
               <HighlightBadge>{college.highestPackage} LPA</HighlightBadge>
@@ -203,11 +209,15 @@ const MobileView = ({ colleges, filter, onGetInsights }: any) => (
         <CardHeader>
           <div className="flex items-start gap-4">
             <div>
-              <CardTitle>{college.name} ({college.code})</CardTitle>
+              <CardTitle>{college.name}</CardTitle>
             </div>
           </div>
         </CardHeader>
         <CardContent className="grid grid-cols-2 gap-4">
+          <div className="text-center p-2 rounded-md bg-secondary">
+            <p className="text-sm text-muted-foreground">Code</p>
+            <p className="text-lg font-bold">{college.code}</p>
+          </div>
           <div className="text-center p-2 rounded-md bg-secondary">
             <p className="text-sm text-muted-foreground">Rank</p>
             <p className="text-lg font-bold">{college.ranking}</p>
@@ -216,7 +226,7 @@ const MobileView = ({ colleges, filter, onGetInsights }: any) => (
             <p className="text-sm text-muted-foreground">Highest Package</p>
             <HighlightBadge>{college.highestPackage} LPA</HighlightBadge>
           </div>
-          <div className="text-center p-2 rounded-md bg-secondary col-span-2">
+          <div className="text-center p-2 rounded-md bg-secondary">
             <p className="text-sm text-muted-foreground">
               {filter !== 'ALL' ? `${filter} Cutoff` : 'Cutoff'}
             </p>
