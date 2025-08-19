@@ -14,5 +14,4 @@ export type College = {
     [key in Category]: number;
   };
   description: string;
-  logoUrl: string;
 };

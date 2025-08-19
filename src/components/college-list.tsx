@@ -23,7 +23,6 @@ import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { ArrowUpDown, Bot, Sparkles } from "lucide-react";
-import Image from "next/image";
 import { PersonalizedInsightsDialog } from "./personalized-insights-dialog";
 
 interface CollegeListProps {
@@ -178,14 +177,6 @@ const DesktopView = ({ colleges, filter, sortConfig, requestSort, getSortIndicat
           <TableRow key={college.id}>
             <TableCell>
               <div className="flex items-center gap-3">
-                <Image
-                  src={college.logoUrl}
-                  alt={`${college.name} logo`}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                  data-ai-hint="university logo"
-                />
                 <span className="font-medium">{college.name}</span>
               </div>
             </TableCell>
@@ -216,14 +207,6 @@ const MobileView = ({ colleges, filter, onGetInsights }: any) => (
       <Card key={college.id} className="w-full">
         <CardHeader>
           <div className="flex items-start gap-4">
-            <Image
-              src={college.logoUrl}
-              alt={`${college.name} logo`}
-              width={48}
-              height={48}
-              className="rounded-lg"
-              data-ai-hint="university building"
-            />
             <div>
               <CardTitle>{college.name}</CardTitle>
             </div>
