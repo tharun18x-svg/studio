@@ -5,7 +5,7 @@ import { getPersonalizedCollegeInsights, type PersonalizedCollegeInsightsInput }
 export async function generateInsights(input: PersonalizedCollegeInsightsInput) {
   try {
     const result = await getPersonalizedCollegeInsights(input);
-    return { success: true, insights: result.insights };
+    return { success: true, insights: result.insights, eligibility: result.eligibility };
   } catch (error) {
     console.error('Error generating insights:', error);
     return { success: false, error: 'Failed to generate insights. Please try again later.' };

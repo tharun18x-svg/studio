@@ -16,14 +16,18 @@ import {z} from 'genkit';
 // Define the input schema for the personalized college insights flow
 const PersonalizedCollegeInsightsInputSchema = z.object({
   percentage: z.number().describe("The student's percentage in 12th grade."),
-  testScores: z.number().describe('The student’s standardized test scores (e.g., SAT, ACT).'),
+  generalRank: z.number().describe("The student's general rank."),
+  cutoff: z.number().describe("The student's cutoff score."),
   interests: z.string().describe('The student’s academic and extracurricular interests.'),
   collegeDescription: z.string().describe('A description of the college.'),
+  collegeCutoff: z.number().describe('The cutoff score for the selected category in the college.'),
+  collegeRank: z.number().describe('The ranking of the college.'),
 });
 export type PersonalizedCollegeInsightsInput = z.infer<typeof PersonalizedCollegeInsightsInputSchema>;
 
 // Define the output schema for the personalized college insights flow
 const PersonalizedCollegeInsightsOutputSchema = z.object({
+  eligibility: z.string().describe("A statement on whether the student is eligible for the college based on their rank and cutoff. It should be either 'Eligible' or 'Not Eligible'."),
   insights: z.string().describe('Personalized insights on how well the student’s profile aligns with the college.'),
 });
 export type PersonalizedCollegeInsightsOutput = z.infer<typeof PersonalizedCollegeInsightsOutputSchema>;
@@ -35,12 +39,18 @@ const personalizedCollegeInsightsPrompt = ai.definePrompt({
   output: {schema: PersonalizedCollegeInsightsOutputSchema},
   prompt: `You are an expert college advisor providing personalized insights to students.
 
-  Based on the student's percentage in 12th grade, test scores, and interests, assess how well their profile aligns with the following college:
+  First, determine if the student is eligible for the college. A student is eligible if their general rank is less than or equal to the college's rank AND their cutoff score is greater than or equal to the college's cutoff for the selected category.
+  Based on this, set the 'eligibility' field to 'Eligible' or 'Not Eligible'.
+
+  Next, based on the student's percentage in 12th grade and interests, assess how well their profile aligns with the following college, regardless of their eligibility.
 
   College Description: {{{collegeDescription}}}
+  College Rank: {{{collegeRank}}}
+  College Cutoff for Category: {{{collegeCutoff}}}
 
   Student 12th Percentage: {{{percentage}}}
-  Student Test Scores: {{{testScores}}}
+  Student General Rank: {{{generalRank}}}
+  Student Cutoff: {{{cutoff}}}
   Student Interests: {{{interests}}}
 
   Provide specific insights on the student's fit, highlighting strengths and areas for improvement.
@@ -64,7 +74,7 @@ const personalizedCollegeInsightsFlow = ai.defineFlow(
 /**
  * Retrieves personalized college insights based on a student's academic profile.
  *
- * @param input - The input containing the student's 12th percentage, test scores, interests, and college description.
+ * @param input - The input containing the student's profile and college data.
  * @returns A promise that resolves to the personalized college insights.
  */
 export async function getPersonalizedCollegeInsights(

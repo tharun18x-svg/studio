@@ -123,6 +123,7 @@ export default function CollegeList({ colleges }: CollegeListProps) {
       {selectedCollege && (
         <PersonalizedInsightsDialog
           college={selectedCollege}
+          filterCategory={filter}
           open={!!selectedCollege}
           onOpenChange={(isOpen) => {
             if (!isOpen) {
