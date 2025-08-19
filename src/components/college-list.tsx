@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { ArrowUpDown, Bot, Sparkles } from "lucide-react";
+import { ArrowUpDown, Sparkles } from "lucide-react";
 import { PersonalizedInsightsDialog } from "./personalized-insights-dialog";
 
 interface CollegeListProps {
