@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Bot, CheckCircle, XCircle } from "lucide-react";
-import type { College, FilterCategory } from "@/lib/types";
+import type { College, Course, FilterCategory } from "@/lib/types";
 import { generateInsights } from "@/app/actions";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "./ui/scroll-area";
@@ -34,6 +34,7 @@ import { Badge } from "./ui/badge";
 
 interface PersonalizedInsightsDialogProps {
   college: College;
+  course: Course;
   filterCategory: FilterCategory;
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -46,7 +47,7 @@ const formSchema = z.object({
   interests: z.string().min(10, "Please describe your interests.").max(500),
 });
 
-export function PersonalizedInsightsDialog({ college, filterCategory, open, onOpenChange }: PersonalizedInsightsDialogProps) {
+export function PersonalizedInsightsDialog({ college, course, filterCategory, open, onOpenChange }: PersonalizedInsightsDialogProps) {
   const [isPending, startTransition] = useTransition();
   const [insights, setInsights] = useState<string | null>(null);
   const [eligibility, setEligibility] = useState<string | null>(null);
@@ -79,8 +80,9 @@ export function PersonalizedInsightsDialog({ college, filterCategory, open, onOp
       const result = await generateInsights({
         ...values,
         collegeDescription: college.description,
-        collegeCutoff: college.cutoffs[filterCategory],
         collegeRank: college.ranking,
+        courseName: course.name,
+        courseCutoff: course.cutoffs[filterCategory],
       });
 
       if (result.success) {
@@ -105,6 +107,16 @@ export function PersonalizedInsightsDialog({ college, filterCategory, open, onOp
       form.reset();
     }
   };
+  
+  useEffect(() => {
+    if (!open) {
+      // Also reset on open prop change
+      setInsights(null);
+      setEligibility(null);
+      form.reset();
+    }
+  }, [open, form]);
+
 
   const handleBackToForm = () => {
     setInsights(null);
@@ -115,9 +127,9 @@ export function PersonalizedInsightsDialog({ college, filterCategory, open, onOp
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
-          <DialogTitle>Personalized Insights for {college.name}</DialogTitle>
+          <DialogTitle>Personalized Insights for {course.name}</DialogTitle>
           <DialogDescription>
-            Enter your details to get AI-powered insights on your fit with this college.
+            At <span className="font-semibold text-foreground">{college.name}</span>. Enter your details to get AI-powered insights.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -200,10 +212,10 @@ export function PersonalizedInsightsDialog({ college, filterCategory, open, onOp
                 <Alert variant={eligibility === 'Eligible' ? 'default' : 'destructive'} className={eligibility === 'Eligible' ? 'bg-green-50 border-green-200' : ''}>
                     {eligibility === 'Eligible' ? <CheckCircle className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
                     <AlertTitle className="font-bold">
-                        You are {eligibility === 'Eligible' ? 'Eligible' : 'Not Eligible'} for {college.name}
+                        You are {eligibility === 'Eligible' ? 'Eligible' : 'Not Eligible'} for {course.name}
                     </AlertTitle>
                      <AlertDescription>
-                        Based on the provided rank and cutoff for the '{filterCategory}' category.
+                        Based on your cutoff for the '{filterCategory}' category.
                     </AlertDescription>
                 </Alert>
 

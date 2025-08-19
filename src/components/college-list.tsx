@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo, type FC } from "react";
-import type { College, Category, FilterCategory } from "@/lib/types";
+import { useState, useMemo, type FC, Fragment } from "react";
+import type { College, Category, FilterCategory, Course } from "@/lib/types";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   Table,
@@ -18,11 +18,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { ArrowUpDown, Sparkles } from "lucide-react";
+import { ArrowUpDown, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 import { PersonalizedInsightsDialog } from "./personalized-insights-dialog";
 
 interface CollegeListProps {
@@ -38,13 +43,15 @@ export default function CollegeList({ colleges }: CollegeListProps) {
     key: SortKey;
     direction: "ascending" | "descending";
   } | null>({ key: "ranking", direction: "ascending" });
-  const [selectedCollege, setSelectedCollege] = useState<College | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<{ college: College, course: Course } | null>(null);
+  const [openCollapsibles, setOpenCollapsibles] = useState<Record<number, boolean>>({});
+
+  const toggleCollapsible = (collegeId: number) => {
+    setOpenCollapsibles(prev => ({ ...prev, [collegeId]: !prev[collegeId] }));
+  };
 
   const sortedAndFilteredColleges = useMemo(() => {
-    let filteredColleges =
-      filter === "ALL"
-        ? [...colleges]
-        : colleges.filter(() => true); // In a real scenario, you'd filter based on a property
+    let filteredColleges = [...colleges];
 
     if (sortConfig !== null) {
       filteredColleges.sort((a, b) => {
@@ -58,7 +65,7 @@ export default function CollegeList({ colleges }: CollegeListProps) {
       });
     }
     return filteredColleges;
-  }, [colleges, filter, sortConfig]);
+  }, [colleges, sortConfig]);
 
   const requestSort = (key: SortKey) => {
     let direction: "ascending" | "descending" = "ascending";
@@ -81,8 +88,8 @@ export default function CollegeList({ colleges }: CollegeListProps) {
 
   const categories: FilterCategory[] = ["ALL", "OC", "MBC", "BC", "BCM", "SC"];
 
-  const handleGetInsightsClick = (college: College) => {
-    setSelectedCollege(college);
+  const handleGetInsightsClick = (college: College, course: Course) => {
+    setSelectedCourse({ college, course });
   };
 
   return (
@@ -108,6 +115,8 @@ export default function CollegeList({ colleges }: CollegeListProps) {
           colleges={sortedAndFilteredColleges}
           filter={filter}
           onGetInsights={handleGetInsightsClick}
+          openCollapsibles={openCollapsibles}
+          toggleCollapsible={toggleCollapsible}
         />
       ) : (
         <DesktopView
@@ -117,17 +126,20 @@ export default function CollegeList({ colleges }: CollegeListProps) {
           requestSort={requestSort}
           getSortIndicator={getSortIndicator}
           onGetInsights={handleGetInsightsClick}
+          openCollapsibles={openCollapsibles}
+          toggleCollapsible={toggleCollapsible}
         />
       )}
 
-      {selectedCollege && (
+      {selectedCourse && (
         <PersonalizedInsightsDialog
-          college={selectedCollege}
+          college={selectedCourse.college}
+          course={selectedCourse.course}
           filterCategory={filter}
-          open={!!selectedCollege}
+          open={!!selectedCourse}
           onOpenChange={(isOpen) => {
             if (!isOpen) {
-              setSelectedCollege(null);
+              setSelectedCourse(null);
             }
           }}
         />
@@ -146,7 +158,7 @@ const HighlightBadge: FC<{ children: React.ReactNode }> = ({ children }) => (
   </Badge>
 );
 
-const DesktopView = ({ colleges, filter, sortConfig, requestSort, getSortIndicator, onGetInsights }: any) => (
+const DesktopView = ({ colleges, filter, sortConfig, requestSort, getSortIndicator, onGetInsights, openCollapsibles, toggleCollapsible }: any) => (
   <Card>
     <Table>
       <TableHeader>
@@ -167,82 +179,137 @@ const DesktopView = ({ colleges, filter, sortConfig, requestSort, getSortIndicat
               Highest Package {getSortIndicator("highestPackage")}
             </Button>
           </TableHead>
-          <TableHead className="text-center">
-            {filter !== 'ALL' ? `${filter} Cutoff` : 'Cutoff'}
-          </TableHead>
           <TableHead></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {colleges.map((college: College) => (
-          <TableRow key={college.id}>
-            <TableCell>
-              <div className="flex items-center gap-3">
-                <span className="font-medium">{college.name}</span>
-              </div>
-            </TableCell>
-            <TableCell className="text-center">{college.code}</TableCell>
-            <TableCell className="text-center">{college.ranking}</TableCell>
-            <TableCell className="text-center">
-              <HighlightBadge>{college.highestPackage} LPA</HighlightBadge>
-            </TableCell>
-            <TableCell className="text-center">
-              {filter !== 'ALL' && <HighlightBadge>{college.cutoffs[filter as Category]}</HighlightBadge>}
-              {filter === 'ALL' && <span className="text-muted-foreground">Select a category</span>}
-            </TableCell>
-            <TableCell className="text-right">
-              <Button onClick={() => onGetInsights(college)}>
-                <Sparkles className="mr-2 h-4 w-4" /> Get Insights
-              </Button>
-            </TableCell>
-          </TableRow>
+          <Fragment key={college.id}>
+             <Collapsible asChild open={openCollapsibles[college.id]} onOpenChange={() => toggleCollapsible(college.id)}>
+              <>
+                <TableRow className="border-b-0">
+                  <TableCell>
+                     <CollapsibleTrigger asChild>
+                        <button className="flex items-center gap-3 text-left">
+                          <span className="font-medium">{college.name}</span>
+                          {openCollapsibles[college.id] ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                        </button>
+                      </CollapsibleTrigger>
+                  </TableCell>
+                  <TableCell className="text-center">{college.code}</TableCell>
+                  <TableCell className="text-center">{college.ranking}</TableCell>
+                  <TableCell className="text-center">
+                    <HighlightBadge>{college.highestPackage} LPA</HighlightBadge>
+                  </TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+                <CollapsibleContent asChild>
+                  <tr className="bg-muted/50">
+                    <td colSpan={5}>
+                        <div className="p-4">
+                            <h4 className="font-semibold mb-2 text-primary">Available Courses</h4>
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>Course Name</TableHead>
+                                        <TableHead className="text-center">
+                                            {filter !== 'ALL' ? `${filter} Cutoff` : 'Cutoff'}
+                                        </TableHead>
+                                        <TableHead></TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {college.courses.map(course => (
+                                        <TableRow key={course.id}>
+                                            <TableCell>{course.name}</TableCell>
+                                            <TableCell className="text-center">
+                                                {filter !== 'ALL' && <HighlightBadge>{course.cutoffs[filter as Category]}</HighlightBadge>}
+                                                {filter === 'ALL' && <span className="text-muted-foreground">Select a category</span>}
+                                            </TableCell>
+                                            <TableCell className="text-right">
+                                                <Button onClick={() => onGetInsights(college, course)}>
+                                                    <Sparkles className="mr-2 h-4 w-4" /> Get Insights
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    </td>
+                  </tr>
+                </CollapsibleContent>
+              </>
+            </Collapsible>
+          </Fragment>
         ))}
       </TableBody>
     </Table>
   </Card>
 );
 
-const MobileView = ({ colleges, filter, onGetInsights }: any) => (
+const MobileView = ({ colleges, filter, onGetInsights, openCollapsibles, toggleCollapsible }: any) => (
   <div className="grid gap-4">
     {colleges.map((college: College) => (
-      <Card key={college.id} className="w-full">
-        <CardHeader>
-          <div className="flex items-start gap-4">
-            <div>
-              <CardTitle>{college.name}</CardTitle>
+       <Collapsible key={college.id} asChild open={openCollapsibles[college.id]} onOpenChange={() => toggleCollapsible(college.id)}>
+        <Card className="w-full">
+            <CardHeader>
+                <CollapsibleTrigger>
+                    <div className="flex justify-between items-start gap-4">
+                        <div>
+                        <CardTitle>{college.name}</CardTitle>
+                        </div>
+                        {openCollapsibles[college.id] ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                    </div>
+                </CollapsibleTrigger>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-4">
+            <div className="text-center p-2 rounded-md bg-secondary">
+                <p className="text-sm text-muted-foreground">Code</p>
+                <p className="text-lg font-bold">{college.code}</p>
             </div>
-          </div>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-4">
-          <div className="text-center p-2 rounded-md bg-secondary">
-            <p className="text-sm text-muted-foreground">Code</p>
-            <p className="text-lg font-bold">{college.code}</p>
-          </div>
-          <div className="text-center p-2 rounded-md bg-secondary">
-            <p className="text-sm text-muted-foreground">Rank</p>
-            <p className="text-lg font-bold">{college.ranking}</p>
-          </div>
-          <div className="text-center p-2 rounded-md bg-secondary">
-            <p className="text-sm text-muted-foreground">Highest Package</p>
-            <HighlightBadge>{college.highestPackage} LPA</HighlightBadge>
-          </div>
-          <div className="text-center p-2 rounded-md bg-secondary">
-            <p className="text-sm text-muted-foreground">
-              {filter !== 'ALL' ? `${filter} Cutoff` : 'Cutoff'}
-            </p>
-            {filter !== 'ALL' ? (
-              <HighlightBadge>{college.cutoffs[filter as Category]}</HighlightBadge>
-            ) : (
-               <span className="text-sm text-muted-foreground">Select category</span>
-            )}
-          </div>
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full" onClick={() => onGetInsights(college)}>
-            <Sparkles className="mr-2 h-4 w-4" /> Get Insights
-          </Button>
-        </CardFooter>
-      </Card>
+            <div className="text-center p-2 rounded-md bg-secondary">
+                <p className="text-sm text-muted-foreground">Rank</p>
+                <p className="text-lg font-bold">{college.ranking}</p>
+            </div>
+            <div className="col-span-2 text-center p-2 rounded-md bg-secondary">
+                <p className="text-sm text-muted-foreground">Highest Package</p>
+                <HighlightBadge>{college.highestPackage} LPA</HighlightBadge>
+            </div>
+            </CardContent>
+             <CollapsibleContent>
+                <CardContent>
+                     <h4 className="font-semibold mb-2 text-primary text-center">Available Courses</h4>
+                    <div className="grid gap-4">
+                        {college.courses.map((course: Course) => (
+                            <Card key={course.id} className="bg-background">
+                                <CardHeader>
+                                    <CardTitle className="text-base">{course.name}</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-center p-2 rounded-md bg-secondary">
+                                        <p className="text-sm text-muted-foreground">
+                                        {filter !== 'ALL' ? `${filter} Cutoff` : 'Cutoff'}
+                                        </p>
+                                        {filter !== 'ALL' ? (
+                                        <HighlightBadge>{course.cutoffs[filter as Category]}</HighlightBadge>
+                                        ) : (
+                                        <span className="text-sm text-muted-foreground">Select category</span>
+                                        )}
+                                    </div>
+                                </CardContent>
+                                <CardFooter>
+                                    <Button className="w-full" onClick={() => onGetInsights(college, course)}>
+                                        <Sparkles className="mr-2 h-4 w-4" /> Get Insights
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        ))}
+                    </div>
+                </CardContent>
+             </CollapsibleContent>
+        </Card>
+      </Collapsible>
     ))}
   </div>
 );
