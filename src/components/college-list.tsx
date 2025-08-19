@@ -29,7 +29,7 @@ interface CollegeListProps {
   colleges: College[];
 }
 
-type SortKey = "ranking" | "generalRank" | "highestPackage";
+type SortKey = "ranking" | "highestPackage";
 
 export default function CollegeList({ colleges }: CollegeListProps) {
   const isMobile = useIsMobile();
@@ -157,11 +157,6 @@ const DesktopView = ({ colleges, filter, sortConfig, requestSort, getSortIndicat
             </Button>
           </TableHead>
           <TableHead>
-            <Button variant="ghost" onClick={() => requestSort("generalRank")}>
-              General Rank {getSortIndicator("generalRank")}
-            </Button>
-          </TableHead>
-          <TableHead>
             <Button variant="ghost" onClick={() => requestSort("highestPackage")}>
               Highest Package {getSortIndicator("highestPackage")}
             </Button>
@@ -181,7 +176,6 @@ const DesktopView = ({ colleges, filter, sortConfig, requestSort, getSortIndicat
               </div>
             </TableCell>
             <TableCell className="text-center">{college.ranking}</TableCell>
-            <TableCell className="text-center">{college.generalRank}</TableCell>
             <TableCell className="text-center">
               <HighlightBadge>{college.highestPackage} LPA</HighlightBadge>
             </TableCell>
@@ -218,14 +212,10 @@ const MobileView = ({ colleges, filter, onGetInsights }: any) => (
             <p className="text-lg font-bold">{college.ranking}</p>
           </div>
           <div className="text-center p-2 rounded-md bg-secondary">
-            <p className="text-sm text-muted-foreground">General Rank</p>
-            <p className="text-lg font-bold">{college.generalRank}</p>
-          </div>
-          <div className="text-center p-2 rounded-md bg-secondary">
             <p className="text-sm text-muted-foreground">Highest Package</p>
             <HighlightBadge>{college.highestPackage} LPA</HighlightBadge>
           </div>
-          <div className="text-center p-2 rounded-md bg-secondary">
+          <div className="text-center p-2 rounded-md bg-secondary col-span-2">
             <p className="text-sm text-muted-foreground">
               {filter !== 'ALL' ? `${filter} Cutoff` : 'Cutoff'}
             </p>

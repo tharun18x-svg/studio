@@ -8,7 +8,6 @@ export type College = {
   id: number;
   name: string;
   ranking: number;
-  generalRank: number;
   highestPackage: number; // in LPA
   cutoffs: {
     [key in Category]: number;
