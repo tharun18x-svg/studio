@@ -2,15 +2,6 @@ import type { College } from "@/lib/types";
 
 export const colleges: College[] = [
   {
-    id: 1,
-    name: "Anna University",
-    ranking: 1,
-    nbaScore: 98,
-    highestPackage: 58,
-    cutoffs: { OC: 200, MBC: 198, BC: 199, BCM: 197, SC: 190 },
-    description: "A premier public state university located in Tamil Nadu, India. It's a hub for engineering and technology education and research.",
-  },
-  {
     id: 2,
     name: "PSG College of Technology",
     ranking: 2,
@@ -18,6 +9,7 @@ export const colleges: College[] = [
     highestPackage: 50,
     cutoffs: { OC: 199, MBC: 196, BC: 197, BCM: 195, SC: 188 },
     description: "An autonomous, government-aided, private engineering college in Coimbatore, India. It is affiliated with Anna University.",
+    image: 'https://placehold.co/600x400.png',
   },
   {
     id: 3,
@@ -27,6 +19,7 @@ export const colleges: College[] = [
     highestPackage: 40,
     cutoffs: { OC: 195, MBC: 191, BC: 193, BCM: 190, SC: 178 },
     description: "PSG iTech, the latest initiative of PSG and Sons' Charities, aims to realize the vision of its founder Thiru. G.R. Govindarajulu.",
+    image: 'https://placehold.co/600x400.png',
   },
   {
     id: 4,
@@ -36,6 +29,7 @@ export const colleges: College[] = [
     highestPackage: 44,
     cutoffs: { OC: 197, MBC: 193, BC: 195, BCM: 192, SC: 182 },
     description: "A government-aided autonomous institution located in Madurai, Tamil Nadu, India. It is affiliated to Anna University, Chennai.",
+    image: 'https://placehold.co/600x400.png',
   },
   {
     id: 5,
@@ -45,6 +39,7 @@ export const colleges: College[] = [
     highestPackage: 42,
     cutoffs: { OC: 194, MBC: 189, BC: 192, BCM: 188, SC: 175 },
     description: "An autonomous institution in Coimbatore, Tamil Nadu, India. The college is affiliated with Anna University and accredited by NAAC with 'A' grade.",
+    image: 'https://placehold.co/600x400.png',
   },
   {
     id: 6,
@@ -54,6 +49,7 @@ export const colleges: College[] = [
     highestPackage: 38,
     cutoffs: { OC: 193, MBC: 188, BC: 190, BCM: 187, SC: 174 },
     description: "An engineering college in Coimbatore, started in 1984 under the auspices of Ramanandha Adigalar Foundation, a charitable educational trust of Sakthi Group.",
+    image: 'https://placehold.co/600x400.png',
   },
   {
     id: 7,
@@ -63,6 +59,7 @@ export const colleges: College[] = [
     highestPackage: 36,
     cutoffs: { OC: 192, MBC: 187, BC: 189, BCM: 186, SC: 172 },
     description: "A government-aided autonomous engineering college located in Coimbatore, Tamil Nadu, India. It was founded in the year 1956.",
+    image: 'https://placehold.co/600x400.png',
   },
   {
     id: 8,
@@ -72,5 +69,6 @@ export const colleges: College[] = [
     highestPackage: 30,
     cutoffs: { OC: 190, MBC: 185, BC: 188, BCM: 184, SC: 170 },
     description: "A growing institution with a focus on emerging fields like biotechnology and environmental engineering. It provides a holistic education with an emphasis on sustainability.",
+    image: 'https://placehold.co/600x400.png',
   },
 ];
