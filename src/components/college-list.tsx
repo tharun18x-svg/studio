@@ -184,64 +184,62 @@ const DesktopView = ({ colleges, filter, sortConfig, requestSort, getSortIndicat
       </TableHeader>
       <TableBody>
         {colleges.map((college: College) => (
-          <Fragment key={college.id}>
-             <Collapsible asChild open={openCollapsibles[college.id]} onOpenChange={() => toggleCollapsible(college.id)}>
-              <>
-                <TableRow className="border-b-0">
-                  <TableCell>
-                     <CollapsibleTrigger asChild>
-                        <button className="flex items-center gap-3 text-left">
-                          <span className="font-medium">{college.name}</span>
-                          {openCollapsibles[college.id] ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                        </button>
-                      </CollapsibleTrigger>
-                  </TableCell>
-                  <TableCell className="text-center">{college.code}</TableCell>
-                  <TableCell className="text-center">{college.ranking}</TableCell>
-                  <TableCell className="text-center">
-                    <HighlightBadge>{college.highestPackage} LPA</HighlightBadge>
-                  </TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-                <CollapsibleContent asChild>
-                  <tr className="bg-muted/50">
-                    <td colSpan={5}>
-                        <div className="p-4">
-                            <h4 className="font-semibold mb-2 text-primary">Available Courses</h4>
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>Course Name</TableHead>
-                                        <TableHead className="text-center">
-                                            {filter !== 'ALL' ? `${filter} Cutoff` : 'Cutoff'}
-                                        </TableHead>
-                                        <TableHead></TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {college.courses.map(course => (
-                                        <TableRow key={course.id}>
-                                            <TableCell>{course.name}</TableCell>
-                                            <TableCell className="text-center">
-                                                {filter !== 'ALL' && <HighlightBadge>{course.cutoffs[filter as Category]}</HighlightBadge>}
-                                                {filter === 'ALL' && <span className="text-muted-foreground">Select a category</span>}
-                                            </TableCell>
-                                            <TableCell className="text-right">
-                                                <Button onClick={() => onGetInsights(college, course)}>
-                                                    <Sparkles className="mr-2 h-4 w-4" /> Get Insights
-                                                </Button>
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </div>
-                    </td>
-                  </tr>
-                </CollapsibleContent>
-              </>
-            </Collapsible>
-          </Fragment>
+          <Collapsible asChild key={college.id} open={openCollapsibles[college.id]} onOpenChange={() => toggleCollapsible(college.id)}>
+            <Fragment>
+              <TableRow className="border-b-0">
+                <TableCell>
+                   <CollapsibleTrigger asChild>
+                      <button className="flex items-center gap-3 text-left">
+                        <span className="font-medium">{college.name}</span>
+                        {openCollapsibles[college.id] ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      </button>
+                    </CollapsibleTrigger>
+                </TableCell>
+                <TableCell className="text-center">{college.code}</TableCell>
+                <TableCell className="text-center">{college.ranking}</TableCell>
+                <TableCell className="text-center">
+                  <HighlightBadge>{college.highestPackage} LPA</HighlightBadge>
+                </TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+              <CollapsibleContent asChild>
+                <tr className="bg-muted/50">
+                  <td colSpan={5}>
+                      <div className="p-4">
+                          <h4 className="font-semibold mb-2 text-primary">Available Courses</h4>
+                          <Table>
+                              <TableHeader>
+                                  <TableRow>
+                                      <TableHead>Course Name</TableHead>
+                                      <TableHead className="text-center">
+                                          {filter !== 'ALL' ? `${filter} Cutoff` : 'Cutoff'}
+                                      </TableHead>
+                                      <TableHead></TableHead>
+                                  </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                  {college.courses.map(course => (
+                                      <TableRow key={course.id}>
+                                          <TableCell>{course.name}</TableCell>
+                                          <TableCell className="text-center">
+                                              {filter !== 'ALL' && <HighlightBadge>{course.cutoffs[filter as Category]}</HighlightBadge>}
+                                              {filter === 'ALL' && <span className="text-muted-foreground">Select a category</span>}
+                                          </TableCell>
+                                          <TableCell className="text-right">
+                                              <Button onClick={() => onGetInsights(college, course)}>
+                                                  <Sparkles className="mr-2 h-4 w-4" /> Get Insights
+                                              </Button>
+                                          </TableCell>
+                                      </TableRow>
+                                  ))}
+                              </TableBody>
+                          </Table>
+                      </div>
+                  </td>
+                </tr>
+              </CollapsibleContent>
+            </Fragment>
+          </Collapsible>
         ))}
       </TableBody>
     </Table>
