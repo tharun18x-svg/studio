@@ -173,7 +173,7 @@ const DesktopView = ({ colleges, filter, sortConfig, requestSort, getSortIndicat
           <TableRow key={college.id}>
             <TableCell>
               <div className="flex items-center gap-3">
-                <span className="font-medium">{college.name}</span>
+                <span className="font-medium">{college.name} ({college.code})</span>
               </div>
             </TableCell>
             <TableCell className="text-center">{college.ranking}</TableCell>
@@ -203,7 +203,7 @@ const MobileView = ({ colleges, filter, onGetInsights }: any) => (
         <CardHeader>
           <div className="flex items-start gap-4">
             <div>
-              <CardTitle>{college.name}</CardTitle>
+              <CardTitle>{college.name} ({college.code})</CardTitle>
             </div>
           </div>
         </CardHeader>

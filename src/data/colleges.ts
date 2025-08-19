@@ -3,15 +3,17 @@ import type { College } from "@/lib/types";
 export const colleges: College[] = [
   {
     id: 1,
+    code: 1,
     name: "Anna University, CEG Campus",
     ranking: 1,
     highestPackage: 55,
     cutoffs: { OC: 200, MBC: 198, BC: 199, BCM: 197, SC: 190 },
     description: "The College of Engineering, Guindy (CEG) is a public engineering college in Guindy, Chennai, India and is Asia's oldest technical institution, founded in 1794.",
-    image: 'https://placehold.co/600x400.png',
+    image: 'https://www.annauniv.edu/images/ceg.png',
   },
   {
     id: 2,
+    code: 4,
     name: "Anna University, MIT Campus",
     ranking: 2,
     highestPackage: 52,
@@ -21,6 +23,7 @@ export const colleges: College[] = [
   },
   {
     id: 3,
+    code: 2006,
     name: "PSG College of Technology",
     ranking: 3,
     highestPackage: 50,
@@ -30,6 +33,7 @@ export const colleges: College[] = [
   },
   {
     id: 4,
+    code: 5008,
     name: "Thiagarajar College of Engineering",
     ranking: 4,
     highestPackage: 44,
@@ -39,6 +43,7 @@ export const colleges: College[] = [
   },
   {
     id: 5,
+    code: 2377,
     name: "PSG Institute of Technology and Applied Research",
     ranking: 5,
     highestPackage: 40,
@@ -48,6 +53,7 @@ export const colleges: College[] = [
   },
   {
     id: 6,
+    code: 2718,
     name: "Sri Krishna College of Engineering and Technology",
     ranking: 6,
     highestPackage: 42,
@@ -57,6 +63,7 @@ export const colleges: College[] = [
   },
   {
     id: 7,
+    code: 2712,
     name: "Kumaraguru College of Technology",
     ranking: 7,
     highestPackage: 38,
@@ -66,6 +73,7 @@ export const colleges: College[] = [
   },
   {
     id: 8,
+    code: 2007,
     name: "Coimbatore Institute of Technology",
     ranking: 8,
     highestPackage: 36,
@@ -75,6 +83,7 @@ export const colleges: College[] = [
   },
   {
     id: 9,
+    code: 2709,
     name: "Horizon Institute of Engineering",
     ranking: 9,
     highestPackage: 30,

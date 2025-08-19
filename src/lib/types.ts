@@ -6,6 +6,7 @@ export type FilterCategory = Category | 'ALL';
 
 export type College = {
   id: number;
+  code: number;
   name: string;
   ranking: number;
   highestPackage: number; // in LPA
